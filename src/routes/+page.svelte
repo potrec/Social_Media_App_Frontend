@@ -5,41 +5,57 @@
 				<li>
 					<a href="#">
 						<span class="icon">
-							<ion-icon name="heart" />
+							<ion-icon name="home" />
 						</span>
-						<span class="title">Home</span>
+						<span class="title">Forum dla koksów</span>
 					</a>
 				</li>
 				<li>
 					<a href="#">
 						<span class="icon">
-							<i class="fas fa-home" />
+							<ion-icon name="home" />
 						</span>
-						<span class="title">Home</span>
+						<span class="title">Dashboard</span>
 					</a>
 				</li>
 				<li>
 					<a href="#">
 						<span class="icon">
-							<i class="fas fa-home" />
+							<ion-icon name="people" />
 						</span>
-						<span class="title">Home</span>
+						<span class="title">Friends</span>
 					</a>
 				</li>
 				<li>
 					<a href="#">
 						<span class="icon">
-							<i class="fas fa-home" />
+							<ion-icon name="chatbubble-ellipses" />
 						</span>
-						<span class="title">Home</span>
+						<span class="title">Message</span>
+					</a>
+				</li>
+				<li>
+					<a href="#">
+						<span class="icon">
+							<ion-icon name="person" />
+						</span>
+						<span class="title">Profile</span>
+					</a>
+				</li>
+				<li>
+					<a href="#">
+						<span class="icon">
+							<ion-icon name="log-out" />
+						</span>
+						<span class="title">Sign Out</span>
 					</a>
 				</li>
 			</ul>
 		</div>
-		<div class="main-page-header">
+		<!-- <div class="main-page-header">
 			<h1>My App</h1>
 			<a href="/login">Login</a>
-		</div>
+		</div> -->
 	</div>
 </body>
 <svelte:head>
@@ -84,6 +100,8 @@
 		position: relative;
 		width: 200%;
 		list-style: none;
+		border-top-left-radius: 30px;
+		border-bottom-left-radius: 30px;
 	}
 	.main-page-navigation ul li:hover {
 		background-color: var(--white);
@@ -94,6 +112,41 @@
 	}
 	.main-page-navigation ul li a {
 		position: relative;
+		display: block;
+		width: 100%;
+		display: flex;
+		text-decoration: none;
+		color: var(--white);
 	}
+	.main-page-navigation ul li:hover a {
+		color: var(--blue);
+	}
+	.main-page-navigation ul li a .icon {
+		position: relative;
+		display: block;
+		min-height: 60px;
+		width: 60px;
+		line-height: 60px;
+		text-align: center;
+	}
+	.main-page-navigation ul li a .title {
+		position: relative;
+		display: block;
+		padding: 0 10px;
+		height: 60px;
+		line-height: 60px;
+	}
+	.main-page-navigation ul li:hover a::before {
+		content: '';
+		position: absolute;
+		right: 0;
+		top: -50px;
+		width: 50px;
+		height: 50px;
+		background: #f00;
+		border-radius: 50%;
+		box-shadow: 35px 35px 0px var(--white);
+	}
+
 	/* https://www.youtube.com/watch?v=nUUsUAPEjFc */
 </style>

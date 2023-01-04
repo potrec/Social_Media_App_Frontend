@@ -5,10 +5,8 @@
 	import { goto } from '$app/navigation';
 
 	let email = '',
-		password = '';
-	$: {
-		console.log(email + ' ' + password);
-	}
+		password = '',
+		errorMessage = '';
 	const http = axios.create({
 		baseURL: 'http://127.0.0.1:8000',
 		headers: {
@@ -25,16 +23,19 @@
 				email: email,
 				password: password
 			})
-			.then((response: AxiosResponse<{ user: { name: string } }>) => {
+			.then((response: AxiosResponse<{ error: string }>) => {
 				auth.set(true);
-				navigate('/');
+				navigate('/home');
 			})
-			.catch((reason: AxiosError<{ additionalInfo: string }>) => {
-				if (reason.response!.status === 401) {
-					// Handle bad credentials
+			.catch((reason: AxiosError<{ error: string }>) => {
+				if (reason.response!.status === 404) {
+					errorMessage = reason.response!.data.error;
+				} else if (reason.response!.status === 401) {
+					errorMessage = reason.response!.data.error;
+				} else if (reason.response!.status === 422) {
+					errorMessage = reason.response!.data.error;
 				} else {
-					// Handle else
-					console.log(reason.message);
+					errorMessage = reason.message;
 				}
 				auth.set(false);
 			});
@@ -51,6 +52,9 @@
 		<input bind:value={email} type="email" />
 		<label for="password">Password</label>
 		<input bind:value={password} type="password" />
+		{#if errorMessage}
+			<p>{errorMessage}</p>
+		{/if}
 		<button type="submit">Login</button>
 	</div>
 </form>

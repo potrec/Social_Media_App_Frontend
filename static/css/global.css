@@ -1,0 +1,232 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wdght@300;400;500;600;700;800;900&display=swap');
+*
+{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+  color: black;
+}
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: linear-gradient(45deg, #2196f3, #ff4685);
+  background-size: 100% 100%;
+}
+.container
+{
+  position: relative;
+  padding: 50px;
+  background: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 8px;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.25);
+  flex-direction: column;
+}
+.container .inputBox
+{
+  position: relative;
+  width: 350px;
+  margin: 20px 0;
+}
+.container .inputBox input
+{
+  position: relative;
+  padding: 8px 10px;
+  border: none;
+  outline: none;
+  width: 100%;
+  background: transparent;
+  color : #fff;
+  font-size: 1.25em;
+  letter-spacing: 0.05em;
+  z-index: 2;
+}
+.container .inputBox span
+{
+  position: absolute;
+  left: 0;
+  padding: 10px 0;
+  pointer-events: none;
+  font-size: 1em;
+  transition: 0.5s;
+  color : #333;
+  letter-spacing: 0.05em;
+}
+.container .inputBox i
+{
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: linear-gradient(45deg, #2196f3, #ff4685);
+  transition: 0.5s;
+  z-index: 1;
+  border-radius: 4px;
+  pointer-events: none;
+}
+.container .inputBox span.focused {
+  font-size: 0.85em;
+  transform: translateY(-32px);
+}
+
+.container .inputBox span.filled {
+  font-size: 0.85em;
+  transform: translateY(-32px);
+}
+
+.container .inputBox i.focused {
+  height: 100%;
+  box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.25);
+}
+
+.container .inputBox i.filled {
+  height: 100%;
+  box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.25);
+}
+
+.container .inputBox span {
+  font-size: 1em;
+  transform: translateY(0);
+}
+
+.container .inputBox i {
+  height: 3px;
+  box-shadow: none;
+}
+
+.submit-button {
+  display: inline-block;
+  border: none;
+  outline: none;
+  padding: 15px 30px;
+  font-size: 1em;
+  font-weight: 600;
+  color: #fff;
+  background-color: #333;
+  border-radius: 4px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.submit-button:hover {
+  background-color: #444;
+  box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+}
+
+.submit-button:active {
+  transform: translateY(2px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.submit-button:focus {
+  background-color: #333;
+  outline: 2px solid #333;
+}
+
+.submit-button:not(:active) {
+  background-color: #333;
+}
+
+a {
+  font-size: 1em;
+  color: #333;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+a:hover {
+  color: #444;
+}
+
+
+
+.alert {
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
+}
+
+.alert.show {
+  opacity: 1;
+}
+
+.error-container{
+  position: relative;
+  padding: 20px;
+  background: transparent;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+
+}
+
+.loader-container
+{
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+  position: absolute;
+  z-index: 3;
+}
+.loader
+{
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  width: 100px;
+  height: 100px;
+  margin: auto;
+  border-radius: 50%;
+  background: linear-gradient(#14ffe9,#ffeb3b,#ff00e0);
+  animation: spin 0.5s linear infinite;
+}
+.loader span
+{
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: linear-gradient(#14ffe9,#ffeb3b,#ff00e0);
+}
+.loader span:nth-child(1)
+{
+  filter: blur(5px);
+}
+.loader span:nth-child(2)
+{
+  filter: blur(10px);
+}
+.loader span:nth-child(3)
+{
+  filter: blur(25px);
+}
+.loader span:nth-child(4)
+{
+  filter: blur(50px);
+}
+.loader:after
+{
+  content: '';
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  right: 10px;
+  bottom: 10px;
+  background: linear-gradient(45deg, #2196f3, #ff4685);
+  border-radius: 50%;
+
+}
+
+.wrapped-text{
+  width: 300px;
+  overflow-wrap: break-word;
+}

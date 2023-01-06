@@ -3,10 +3,14 @@
 	import type { AxiosResponse, AxiosError } from 'axios';
 	import { auth } from '../../stores/auth';
 	import { goto } from '$app/navigation';
+	import 'tailwindcss/tailwind.css';
 
 	let email = '',
 		password = '',
-		errorMessage = '';
+		errorMessage = '',
+		isLoading = false,
+		emailFocused = false,
+		passwordFocused = false;
 	const http = axios.create({
 		baseURL: 'http://127.0.0.1:8000',
 		headers: {
@@ -16,6 +20,7 @@
 	});
 
 	async function getUser() {
+		isLoading = true;
 		const csrf = await http.get('/sanctum/csrf-cookie');
 
 		const login = await http
@@ -38,23 +43,83 @@
 					errorMessage = reason.message;
 				}
 				auth.set(false);
+			})
+			.finally(() => {
+				isLoading = false;
 			});
 	}
 	async function navigate(/** @type {string | URL} */ link: string | URL) {
 		await goto(link);
 	}
+
+	const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
+
+	async function hideErrorMessage() {
+		//await sleep(5000);
+		errorMessage = '';
+	}
 </script>
 
-<h1 class="text-3xl font-bold underline">Hello world!</h1>
-<form on:submit|preventDefault={getUser}>
-	<div>
-		<label for="email">Email</label>
-		<input bind:value={email} type="email" />
-		<label for="password">Password</label>
-		<input bind:value={password} type="password" />
-		{#if errorMessage}
-			<p>{errorMessage}</p>
-		{/if}
-		<button type="submit">Login</button>
+<svelte:head>
+	<link rel="stylesheet" href="css/global.css" type="text/css" />
+</svelte:head>
+{#if isLoading}
+	<div class="loader-container">
+		<div class="loader">
+			<span />
+			<span />
+			<span />
+			<span />
+		</div>
 	</div>
+{/if}
+<form on:submit|preventDefault={getUser}>
+	<div class="container">
+		<div class="inputBox">
+			<input
+				bind:value={email}
+				on:focus={() => (emailFocused = true)}
+				on:blur={() => (emailFocused = false)}
+				type="email"
+			/>
+			<span class:focused={emailFocused} class:filled={email}>Email</span>
+			<i class:focused={emailFocused} class:filled={email} />
+		</div>
+		<div class="inputBox">
+			<input
+				bind:value={password}
+				on:focus={() => (passwordFocused = true)}
+				on:blur={() => (passwordFocused = false)}
+				type="password"
+			/>
+			<span class:focused={passwordFocused} class:filled={password}>Password</span>
+			<i class:focused={passwordFocused} class:filled={password} />
+		</div>
+		<button type="submit" class="submit-button">Login</button>
+		<a href="/register">Create an account if you don't have one</a>
+	</div>
+	{#if errorMessage}
+		<div class="error-container">
+			<div class="alert alert-error shadow-lg max-w-1/2 show">
+				<div>
+					<button on:click|once={hideErrorMessage}>
+						<svg
+							xmlns="http://www.w3.org/2000/svg"
+							class="stroke-current flex-shrink-0 h-6 w-6"
+							fill="none"
+							viewBox="0 0 24 24"
+						>
+							<path
+								stroke-linecap="round"
+								stroke-linejoin="round"
+								stroke-width="2"
+								d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
+							/>
+						</svg>
+					</button>
+					<span class="wrapped-text">{errorMessage}</span>
+				</div>
+			</div>
+		</div>
+	{/if}
 </form>

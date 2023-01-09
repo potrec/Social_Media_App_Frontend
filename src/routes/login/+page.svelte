@@ -5,16 +5,21 @@
 	import { goto } from '$app/navigation';
 	import 'tailwindcss/tailwind.css';
 
+
+	// const csrfToken = document.querySelector('meta[name="csrf-token"]')!.getAttribute('content');
+
+	
 	let email = '',
 		password = '',
 		errorMessage = '',
 		isLoading = false,
 		emailFocused = false,
-		passwordFocused = false;
+		passwordFocused = false,
+		token: string;
 	const http = axios.create({
 		baseURL: 'http://127.0.0.1:8000',
 		headers: {
-			'X-Requested-With': 'XMLHttpRequest'
+			'X-Requested-With': 'XMLHttpRequest',
 		},
 		withCredentials: true
 	});
@@ -31,6 +36,9 @@
 			.then((response: AxiosResponse<{ error: string }>) => {
 				auth.set(true);
 				navigate('/home');
+				const token = response.data.token;
+				console.log(token);
+				localStorage.setItem("token", token);
 			})
 			.catch((reason: AxiosError<{ error: string }>) => {
 				if (reason.response!.status === 404) {
@@ -100,7 +108,7 @@
 	</div>
 	{#if errorMessage}
 		<div class="error-container">
-			<div class="alert alert-error shadow-lg max-w-1/2 show">
+			<div class="alert alert-error shadow-lg max-w-[90%] show">
 				<div>
 					<button on:click|once={hideErrorMessage}>
 						<svg

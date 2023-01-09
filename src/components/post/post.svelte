@@ -1,8 +1,37 @@
-<script>
+<script lang="ts">
 	import 'tailwindcss/tailwind.css';
+	export let id;
+	export let userId;
+	export let userName;
+	export let parentId;
+	export let messageContent;
+	export let createdAt;
+	export let updatedAt;
+	import { getUserNameById } from '../../scripts/getUserNameById';
+	import { afterUpdate, onMount } from 'svelte';
+
+	
 </script>
 
-<div class="post bg-black text-white">
+<svelte:head>
+	<link rel="stylesheet" href="css/post.css" type="text/css" />
+</svelte:head>
+
+<div class="post-module">
+	<div class="post-header">
+			<h2 class="post-title">{messageContent}</h2>
+			<div class="post-meta">
+					<p>Posted by {userName}</p>
+					<p>On {createdAt}</p>
+			</div>
+	</div>
+	<div class="post-content">
+			<p>{messageContent}</p>
+	</div>
+</div>
+
+
+<!-- <div class="post bg-black text-white">
 	<div class="post-header flex justify-center content-start">
 		<div class="profile-picture mr-4 ml-4">
 			<img
@@ -42,7 +71,7 @@
 			</div>
 		</div>
 	</div>
-</div>
+</div> -->
 <!-- <div class="post-names">
 			<p class="ml-5 text-xl ">Maciej Potręć</p>
 			<p class="ml-5 text-xl font-medium">@potrec</p>

@@ -10,14 +10,14 @@
 <div class="flex flex-col h-screen ">
 	<Header />
 	<div class="flex-1 overflow-scroll">
+		<!-- <Post />
 		<Post />
 		<Post />
 		<Post />
 		<Post />
 		<Post />
 		<Post />
-		<Post />
-		<Post />
+		<Post /> -->
 	</div>
 	<Footer />
 </div>

@@ -17,7 +17,6 @@ export async function getUserNameById(userId: number) {
     .then((response: AxiosResponse) => {
       // User is authenticated
       userName = response.data;
-      console.log("Username by id",userName);
     })
     .catch((reason: AxiosError) => {
       console.log(reason);

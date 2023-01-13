@@ -39,6 +39,7 @@
 				const token = response.data.token;
 				console.log(token);
 				localStorage.setItem("token", token);
+				sessionStorage.setItem("userId",response.data.user.id);
 			})
 			.catch((reason: AxiosError<{ error: string }>) => {
 				if (reason.response!.status === 404) {

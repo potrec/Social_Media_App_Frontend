@@ -1,8 +1,8 @@
 .post-module {
   background-color: #fff;
-  border: 1px solid #e6e6e6;
+  border: 3px solid #e6e6e6;
   overflow: hidden;
-  width: 100%;
+  width: 50vh;
 }
 
 .post-header {
@@ -34,4 +34,21 @@
   font-size: 16px;
   line-height: 1.5;
   padding: 20px;
+}
+.post-userdata
+{
+  display: flex;
+}
+span{
+  color:#fff;
+}
+p{
+
+  font-size: 24px;
+}
+.wrapped-text
+{
+  width: 100%;
+  overflow-wrap: break-word;
+  margin-left: 10px;
 }

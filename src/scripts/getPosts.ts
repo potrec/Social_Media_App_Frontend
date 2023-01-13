@@ -16,7 +16,6 @@ export async function getPosts()
   const response = await http.get('/api/getposts')
     .then((response: AxiosResponse) => {
       posts = response.data;
-      console.log(response);
     })
     .catch((reason: AxiosError) => {
       console.error(reason);

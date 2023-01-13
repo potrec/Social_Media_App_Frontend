@@ -17,7 +17,6 @@ export async function getUserName() {
     .then((response: AxiosResponse) => {
       // User is authenticated
       userName = response.data.name;
-      console.log(userName);
     })
     .catch((reason: AxiosError) => {
       if(reason.response!.status === 404)

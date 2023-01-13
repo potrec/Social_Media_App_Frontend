@@ -20,7 +20,7 @@ onMount(async () => {
   posts = await getPosts(); 
   setInterval(async () => {
     posts = await getPosts();
-  }, 3000);
+  }, 5000);
 });
 afterUpdate(() => {
   let textarea = document.querySelector("textarea");
@@ -52,7 +52,7 @@ async function createPost()
 			})
 			.then((response: AxiosResponse<{ error: string }>) => {
 				console.log(response);
-        
+        location.reload();
 			})
 			.catch((reason: AxiosError<{ error: string }>) => {
 				console.log(reason);
@@ -67,33 +67,64 @@ async function createPost()
 <svelte:head>
 	<link rel="stylesheet" href="css/global.css" type="text/css" />
 </svelte:head>
-<div class="main-page">
-  <form on:submit|preventDefault={createPost}>
-    <div class="flex flex-col">
-      <h2>Welcome {userName}</h2>
-      <div class="container message-container">
-        <h2>What do you wanna write?</h2>
-        <textarea bind:value={messageContent} class="message-form" placeholder="Treść wiadomości" required></textarea>
-        <button type="submit" class="submit-button">Post</button>
+<div class="drawer">
+  <input id="my-drawer-3" type="checkbox" class="drawer-toggle" /> 
+  <div class="drawer-content flex flex-col self-center">
+    <!-- Navbar -->
+    <div class="w-full navbar bg-base-300">
+      <div class="flex-none lg:hidden">
+        <label for="my-drawer-3" class="btn btn-square btn-ghost">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="inline-block w-6 h-6 stroke-current"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+        </label>
+      </div> 
+      <div class="flex-1 px-2 mx-2 white-text">Post'em</div>
+      <div class="flex-none hidden lg:block">
+        <ul class="menu menu-horizontal">
+          <!-- Navbar menu content here -->
+          <li><a>Navbar Item 1</a></li>
+          <li><a>Log out</a></li>
+        </ul>
       </div>
-      <textarea class="message-form"></textarea>
     </div>
-  </form>
-  <div class="row">
-    {#each posts as post}
-          <Post 
-              id={post.id} 
-              userId={post.user_id}
-              userName={post.name}
-              userEmail={post.email}  
-              parentId={post.parent_id} 
-              messageContent={post.messageContent} 
-              createdAt={post.created_at} 
-              updatedAt={post.updated_at} 
-          />
-    {/each}
+    <div class="main-page">
+      <form on:submit|preventDefault={createPost}>
+        <div class="post-form">
+          <div class="container message-container">
+            <h2>Welcome {userName}</h2>
+            <h2>What do you wanna post?</h2>
+            <textarea bind:value={messageContent} class="message-form" placeholder="Treść wiadomości" required></textarea>
+            <button type="submit" class="submit-button">Post</button>
+          </div>
+        </div>
+      </form>
+      <div class="row">
+        {#each posts as post}
+              <Post 
+                  id={post.id} 
+                  userId={post.user_id}
+                  userName={post.name}
+                  userEmail={post.email}  
+                  parentId={post.parent_id} 
+                  messageContent={post.messageContent} 
+                  createdAt={post.created_at} 
+                  updatedAt={post.updated_at} 
+              />
+        {/each}
+      </div>
+    </div>
+  </div> 
+  <div class="drawer-side">
+    <label for="my-drawer-3" class="drawer-overlay"></label> 
+    <ul class="menu p-4 w-80 bg-base-100">
+      <!-- Sidebar content here -->
+      <li><a>Sidebar Item 1</a></li>
+      <li><a>Sidebar Item 2</a></li>
+      
+    </ul>
+    
   </div>
 </div>
+
 
 
 

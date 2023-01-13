@@ -1,15 +1,19 @@
 <script lang="ts">
 	import 'tailwindcss/tailwind.css';
-	export let id: Number;
-	export let userId: Number;
+	import axios from 'axios';
+	import type { AxiosResponse, AxiosError } from 'axios';
+	import { getToken } from '../../scripts/getToken';
+	export let id: number;
+	export let userId: number;
 	export let userName: string;
 	export let userEmail: string;
-	export let parentId: Number;
+	export let parentId: number;
 	export let messageContent: string;
 	export let createdAt: string;
 	export let updatedAt: string;
 	let email: string[] = userEmail.split('@');
 	
+
 	function getTimeDifference(date: string): string {
     const currentTime = new Date();
     const dataTime = new Date(date);
@@ -33,9 +37,9 @@
 function checkUserIfUserPosted(loggedUserId: number,userId: number ): boolean {
 	if(loggedUserId != userId)
 	{
-		return false;
+		return true;
 	}
-	return true;
+	return false;
 }
 
 function getFirstUsernameLetter(userName: string)
@@ -45,13 +49,39 @@ function getFirstUsernameLetter(userName: string)
 
 
 
-let isUserPost = false;
+let isUserPost = true;
 let userAvatar = getFirstUsernameLetter(userName);
 let postTime = getTimeDifference(createdAt.toString());
 let loggedUserId = sessionStorage.getItem('userId');
 if(loggedUserId)
 {
 	isUserPost = checkUserIfUserPosted(parseInt(loggedUserId),userId);
+}
+
+let showMenu = false;
+
+function toggleMenu() {
+	showMenu = !showMenu;
+}
+async function deletePost(postId: Number){
+	console.log(postId);
+	const http = axios.create({
+  baseURL: 'http://127.0.0.1:8000',
+  headers: {
+    'X-Requested-With': 'XMLHttpRequest',
+    "Authorization": "Bearer " + getToken(),
+  },
+  withCredentials: true
+  });
+	const request = await http
+			.delete(`/api/posts/${postId}`)
+			.then((response: AxiosResponse<{ error: string }>) => {
+				console.log(response);
+				location.reload();
+			})
+			.catch((reason: AxiosError<{ error: string }>) => {
+				console.log(reason);
+			})
 }
 
 </script>
@@ -64,7 +94,7 @@ if(loggedUserId)
 	<div class="post-header">
 			<div class="post-userdata">
 				<div class="avatar placeholder">
-					<div class="bg-neutral-focus text-neutral-content rounded-full w-24">
+					<div class="bg-neutral-focus text-neutral-content rounded-full">
 						<span class="text-3xl">{userAvatar}</span>
 					</div>
 				</div> 
@@ -72,15 +102,19 @@ if(loggedUserId)
 					<p>{userName}</p>
 					<p>@{email[0]}</p>
 					<p>{postTime}</p>
-					{#if isUserPost}
-					<div class="flex-none">
-						<button class="btn btn-square btn-ghost">
-							<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="inline-block w-5 h-5 stroke-current"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z"></path></svg>
-						</button>
-					</div>
-					{/if}
 				</div>
 			</div>
+			{#if !isUserPost}
+					<div class="flex-none">
+						<button class="btn btn-square btn-ghost"  on:click={toggleMenu}>
+							<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="inline-block w-5 h-5 stroke-current"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z"></path></svg>
+						</button>
+						<div class="menu" class:hidden={!showMenu}>
+							<button class="btn btn-square btn-ghost">Edit post</button>
+							<button on:click={deletePost(id)} class="btn btn-square btn-ghost">Delete post</button>
+					</div>
+					</div>
+					{/if}
 	</div>
 	<div class="post-content">
 			<p>{messageContent}</p>

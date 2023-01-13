@@ -261,3 +261,17 @@ a:hover {
 {
   width: 0px;
 }
+
+li{
+  color: #fff;
+}
+.white-text
+{
+  color: #fff;
+}
+.main-page
+{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}

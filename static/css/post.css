@@ -2,12 +2,12 @@
   background-color: #fff;
   border: 3px solid #e6e6e6;
   overflow: hidden;
-  width: 50vh;
+  width: 55vh;
 }
 
 .post-header {
   display: flex;
-  flex-direction: column;
+  /* flex-direction: column; */
   align-items: flex-start;
   padding: 20px;
 }
@@ -20,7 +20,7 @@
 
 .post-meta {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   font-size: 14px;
   color: #999;
   margin: 0;
@@ -44,11 +44,28 @@ span{
 }
 p{
 
-  font-size: 24px;
+  font-size: 14px;
 }
 .wrapped-text
 {
   width: 100%;
   overflow-wrap: break-word;
   margin-left: 10px;
+}
+.post-form
+{
+  width: 55vh;
+}
+
+
+@media only screen and (max-width: 600px)
+{
+  .post-form,
+  .post-module {
+    width: 35vh;
+  }
+}
+
+.hidden {
+  display: none;
 }

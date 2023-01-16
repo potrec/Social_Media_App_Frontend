@@ -275,3 +275,28 @@ li{
   flex-direction: column;
   align-items: center;
 }
+.welcome-container
+{
+  position: relative;
+  padding: 50px;
+  background: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  border-radius: 8px;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.25);
+  flex-direction: column;
+  font-size: 18px;
+}
+
+.welcome-container h1{
+  font-size: 30px;
+  margin-bottom: 50px;
+}
+
+.welcome-container p {
+  font-size: 1.2rem;
+  line-height: 1.5;
+  margin-bottom: 1rem;
+  color: #333;
+}

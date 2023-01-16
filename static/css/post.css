@@ -69,3 +69,12 @@ p{
 .hidden {
   display: none;
 }
+.post-stat
+{
+  margin-left: 10px;
+  display: flex;
+}
+.post-stat > button
+{
+  margin-left: 10px;
+}

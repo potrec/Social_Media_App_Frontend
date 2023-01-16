@@ -84,39 +84,49 @@ async function deletePost(postId: Number){
 			})
 }
 
+let likeCount: Number = 0;
+
 </script>
 
 <svelte:head>
 	<link rel="stylesheet" href="css/post.css" type="text/css" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </svelte:head>
 
 <div class="post-module">
 	<div class="post-header">
-			<div class="post-userdata">
-				<div class="avatar placeholder">
-					<div class="bg-neutral-focus text-neutral-content rounded-full">
-						<span class="text-3xl">{userAvatar}</span>
-					</div>
-				</div> 
-				<div class="post-meta wrapped-text">
-					<p>{userName}</p>
-					<p>@{email[0]}</p>
-					<p>{postTime}</p>
+		<div class="post-userdata">
+			<div class="avatar placeholder">
+				<div class="bg-neutral-focus text-neutral-content rounded-full">
+					<span class="text-3xl">{userAvatar}</span>
+				</div>
+			</div> 
+			<div class="post-meta wrapped-text">
+				<p>{userName}</p>
+				<p>@{email[0]}</p>
+				<p>{postTime}</p>
+			</div>
+		</div>
+		{#if !isUserPost}
+			<div class="flex-none">
+				<button class="btn btn-square btn-ghost"  on:click={toggleMenu}>
+					<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="inline-block w-5 h-5 stroke-current"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z"></path></svg>
+				</button>
+				<div class="menu" class:hidden={!showMenu}>
+					<button class="btn btn-square btn-ghost">Edit post</button>
+					<button on:click={deletePost(id)} class="btn btn-square btn-ghost">Delete post</button>
 				</div>
 			</div>
-			{#if !isUserPost}
-					<div class="flex-none">
-						<button class="btn btn-square btn-ghost"  on:click={toggleMenu}>
-							<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="inline-block w-5 h-5 stroke-current"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z"></path></svg>
-						</button>
-						<div class="menu" class:hidden={!showMenu}>
-							<button class="btn btn-square btn-ghost">Edit post</button>
-							<button on:click={deletePost(id)} class="btn btn-square btn-ghost">Delete post</button>
-					</div>
-					</div>
-					{/if}
+		{/if}
 	</div>
 	<div class="post-content">
 			<p>{messageContent}</p>
+	</div>
+	<div class="post-footer">
+		<div class="post-stat">
+			<button><div class="likes">Likes count:{likeCount} <i class="fa fa-thumbs-up"></i></div></button>
+			<button><div class="dislikes">Dislikes count:{likeCount}<i class="fa fa-thumbs-down"></i></div></button>
+			<button><div class="comments">Comments count:{likeCount}<i class="fa fa-commenting"></i></div></button>
+		</div>
 	</div>
 </div>

@@ -1,5 +1,8 @@
 {
 	"editor.formatOnSave": true,
 	"editor.defaultFormatter": "formulahendry.code-runner",
-	"prettier.bracketSameLine": false
+	"prettier.bracketSameLine": false,
+	"[svelte]": {
+		"editor.defaultFormatter": "svelte.svelte-vscode"
+	}
 }

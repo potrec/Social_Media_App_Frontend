@@ -7,24 +7,34 @@
 	import { getToken } from '../../scripts/getToken';
 	import { getPosts } from '../../scripts/getPosts';
 	import { getUserName } from '../../scripts/getUserName';
+	import { logout } from '../../scripts/logout';
 
 	let userName = '';
 	let messageContent: String = '';
-	let posts: [] = [];
+	interface Post {
+		id: number;
+		user_id: number;
+		name: string;
+		email: string;
+		messageContent: string;
+		created_at: string;
+	}
+	let posts: Post[] = [];
 
 	onMount(async () => {
 		userName = await getUserName();
 		posts = await getPosts();
-		// setInterval(async () => {
-		//   posts = await getPosts();
-		// }, 5000);
 	});
 	afterUpdate(() => {
 		let textarea = document.querySelector('textarea');
 		if (textarea) {
 			textarea.addEventListener('keyup', (e) => {
-				let scHeight = e.target.scrollHeight;
-				textarea.style.height = `${scHeight}px`;
+				if (e.target) {
+					let scHeight = (e.target as HTMLTextAreaElement).scrollHeight;
+					if (textarea) {
+						textarea.style.height = `${scHeight}px`;
+					}
+				}
 			});
 		}
 	});
@@ -81,7 +91,7 @@
 				</label>
 			</div>
 			<div class="flex-1 px-2 mx-2 white-text">Post'em</div>
-			<li><a href="/login">Logout</a></li>
+			<li><a href="/login" on:click={() => logout()}>Logout</a></li>
 		</div>
 		<div class="main-page">
 			<form on:submit|preventDefault={createPost}>
@@ -106,10 +116,8 @@
 						userId={post.user_id}
 						userName={post.name}
 						userEmail={post.email}
-						parentId={post.parent_id}
 						messageContent={post.messageContent}
 						createdAt={post.created_at}
-						updatedAt={post.updated_at}
 					/>
 				{/each}
 			</div>
@@ -118,8 +126,7 @@
 	<div class="drawer-side">
 		<label for="my-drawer-3" class="drawer-overlay" />
 		<ul class="menu p-4 w-80 bg-base-100">
-			<!-- Sidebar content here -->
-			<li><a href="/login">Logout</a></li>
+			<li><a href="/login" on:click={() => logout()}>Logout</a></li>
 		</ul>
 	</div>
 </div>

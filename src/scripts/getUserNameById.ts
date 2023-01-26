@@ -14,12 +14,12 @@ export async function getUserNameById(userId: number) {
   withCredentials: true
   });
   const response = http.get(`/api/getuser/${userId}`)
-    .then((response: AxiosResponse) => {
-      // User is authenticated
-      userName = response.data;
-    })
-    .catch((reason: AxiosError) => {
-      console.log(reason);
-    });
-    return userName;
+  .then((response: AxiosResponse) => {
+    // User is authenticated
+    userName = response.data;
+  })
+  .catch((reason: AxiosError) => {
+    console.log(reason);
+  });
+  return userName;
 }

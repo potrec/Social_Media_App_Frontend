@@ -5,10 +5,6 @@
 	import { goto } from '$app/navigation';
 	import 'tailwindcss/tailwind.css';
 
-
-	// const csrfToken = document.querySelector('meta[name="csrf-token"]')!.getAttribute('content');
-
-	
 	let email = '',
 		password = '',
 		errorMessage = '',
@@ -19,7 +15,7 @@
 	const http = axios.create({
 		baseURL: 'http://127.0.0.1:8000',
 		headers: {
-			'X-Requested-With': 'XMLHttpRequest',
+			'X-Requested-With': 'XMLHttpRequest'
 		},
 		withCredentials: true
 	});
@@ -33,13 +29,13 @@
 				email: email,
 				password: password
 			})
-			.then((response: AxiosResponse<{ error: string }>) => {
+			.then((response: AxiosResponse) => {
 				auth.set(true);
 				navigate('/home');
 				const token = response.data.token;
 				console.log(token);
-				localStorage.setItem("token", token);
-				sessionStorage.setItem("userId",response.data.user.id);
+				localStorage.setItem('token', token);
+				sessionStorage.setItem('userId', response.data.user.id);
 			})
 			.catch((reason: AxiosError<{ error: string }>) => {
 				if (reason.response!.status === 404) {

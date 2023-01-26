@@ -7,7 +7,7 @@
 
 .post-header {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   padding: 20px;
 }
 
@@ -66,7 +66,7 @@ p{
 }
 
 .hidden {
-  display: none;
+  display: none !important;
 }
 .post-stat
 {
@@ -84,4 +84,40 @@ p{
 .disliked
 {
   color: red;
+}
+.menu
+{
+  display: flex;
+  flex-direction: row;
+}
+.comment-form form
+{
+  display: flex;
+  gap: 10px;
+  margin: 20px;
+}
+.comment-form form textarea
+{
+  width: 50%;
+  height: 59px;
+  background: #fff;
+  outline: none;
+  resize: none;
+  font-size: 16px;
+  border-radius: 5px;
+  border: 1px solid #bfbfbf;
+  max-height: 500px;
+  padding: 10px;
+}
+.post-module span
+{
+  color:black;
+}
+.avatar.placeholder > div 
+{
+  min-width: 30px;
+}
+.text-3xl
+{
+  color: #fff !important;
 }

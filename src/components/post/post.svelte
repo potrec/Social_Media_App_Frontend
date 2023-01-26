@@ -4,47 +4,37 @@
 	import type { AxiosResponse, AxiosError } from 'axios';
 	import { getToken } from '../../scripts/getToken';
 	import { onMount } from 'svelte';
+	import Comment from '../../components/comment/comment.svelte';
+	import { getComments } from '../../scripts/getPostComments';
+	import { getTimeDifference } from '../../scripts/getTime';
+	import {
+		checkUserIfUserPosted,
+		getFirstUsernameLetter,
+		createComment,
+		deletePost,
+		getCommentsCount
+	} from '../../scripts/basicScripts';
+	import { http } from '../../scripts/http';
+
 	export let id: number;
 	export let userId: number;
 	export let userName: string;
 	export let userEmail: string;
-	export let parentId: number;
 	export let messageContent: string;
 	export let createdAt: string;
-	export let updatedAt: string;
+
+	interface LikeStats {
+		likes_count: number;
+		dislikes_count: number;
+	}
+	interface Comment {
+		user_id: number;
+		name: string;
+		messageContent: string;
+		created_at: string;
+	}
+
 	let email: string[] = userEmail.split('@');
-
-	function getTimeDifference(date: string): string {
-		const currentTime = new Date();
-		const dataTime = new Date(date);
-		const timeDifference = currentTime.getTime() - dataTime.getTime();
-		const seconds = Math.floor(timeDifference / 1000);
-		const minutes = Math.floor(seconds / 60);
-		const hours = Math.floor(minutes / 60);
-		const days = Math.floor(hours / 24);
-		if (seconds < 60) {
-			return 'just now';
-		} else if (minutes < 60) {
-			return `${minutes} minutes ago`;
-		} else if (hours < 24) {
-			return `${hours} hours ago`;
-		} else if (days < 3) {
-			return `${days} days ago`;
-		} else {
-			return dataTime.toLocaleDateString();
-		}
-	}
-	function checkUserIfUserPosted(loggedUserId: number, userId: number): boolean {
-		if (loggedUserId != userId) {
-			return true;
-		}
-		return false;
-	}
-
-	function getFirstUsernameLetter(userName: string) {
-		return userName.charAt(0);
-	}
-
 	let isUserPost = true;
 	let userAvatar = getFirstUsernameLetter(userName);
 	let postTime = getTimeDifference(createdAt.toString());
@@ -53,38 +43,19 @@
 		isUserPost = checkUserIfUserPosted(parseInt(loggedUserId), userId);
 	}
 	let showMenu = false;
-
-	const http = axios.create({
-		baseURL: 'http://127.0.0.1:8000',
-		headers: {
-			'X-Requested-With': 'XMLHttpRequest',
-			Authorization: 'Bearer ' + getToken()
-		},
-		withCredentials: true
-	});
-
-	function toggleMenu() {
-		showMenu = !showMenu;
-	}
-	async function deletePost(postId: Number) {
-		const request = await http
-			.delete(`/api/posts/${postId}`)
-			.then((response: AxiosResponse<{ error: string }>) => {
-				console.log(response);
-				location.reload();
-			})
-			.catch((reason: AxiosError<{ error: string }>) => {
-				console.log(reason);
-			});
-	}
-
-	let likeStats: Array<any>;
+	let likeStats: LikeStats | null = null;
 	let likeCount: Number = 0;
 	let dislikeCount: Number = 0;
 	let commentCount: Number = 0;
 	let isLiked: Boolean = false;
 	let isDisLiked: Boolean = false;
+	let commentContent = '';
+	let hide = true;
+	let comments: Comment[] = [];
 
+	function toggleMenu() {
+		showMenu = !showMenu;
+	}
 	async function likePost(post_id: number, like: boolean) {
 		const request = await http
 			.post(`/api/reaction/like`, {
@@ -96,19 +67,18 @@
 				console.log(reason);
 			});
 		await getPostsStats(post_id);
-		likeCount = likeStats.likes_count;
-		dislikeCount = likeStats.dislikes_count;
-		console.log(likeCount + ' ' + dislikeCount);
+		if (likeStats) {
+			likeCount = likeStats.likes_count;
+			dislikeCount = likeStats.dislikes_count;
+		}
 		getPostStatus(post_id);
 	}
-
 	async function getPostsStats(post_id: number) {
-		console.log(post_id);
 		const request = await http
 			.post(`/api/reaction/like/count`, {
 				post_id: post_id
 			})
-			.then((response: AxiosResponse<{ error: string }>) => {
+			.then((response: AxiosResponse) => {
 				likeStats = response.data;
 			})
 			.catch((reason: AxiosError<{ error: string }>) => {
@@ -117,19 +87,15 @@
 		return likeStats;
 	}
 	async function getPostStatus(post_id: number) {
-		console.log('changing color of post');
 		const request = await http
 			.post(`/api/reaction/like/check`, {
 				post_id: post_id
 			})
-			.then((response: AxiosResponse<{ error: string }>) => {
-				// console.log("isLiked:"+response.data.message);
+			.then((response: AxiosResponse) => {
 				if (response.data.message == 1) {
-					console.log('isLiked:' + response.data.message);
 					isLiked = true;
 					isDisLiked = false;
 				} else if (response.data.message == 0) {
-					console.log('isDisliked:' + response.data.message);
 					isDisLiked = true;
 					isLiked = false;
 				} else {
@@ -141,11 +107,22 @@
 				console.log(reason);
 			});
 	}
+	async function initComments(id: number) {
+		comments = await getComments(id);
+		hide = false;
+	}
+	async function refreshComments(id: number, commentContent: string) {
+		await createComment(id, commentContent);
+		comments = await getComments(id);
+		commentCount = await getCommentsCount(id);
+	}
 	onMount(async () => {
 		likeStats = await getPostsStats(id);
-		if (likeStats) likeCount = likeStats.likes_count;
-		dislikeCount = likeStats.dislikes_count;
-		console.log(likeStats);
+		if (likeStats) {
+			likeCount = likeStats.likes_count;
+			dislikeCount = likeStats.dislikes_count;
+		}
+		commentCount = await getCommentsCount(id);
 		getPostStatus(id);
 	});
 </script>
@@ -173,8 +150,8 @@
 			</div>
 		</div>
 		{#if !isUserPost}
-			<div class="flex-none">
-				<button class="btn btn-square btn-ghost" on:click={toggleMenu}>
+			<div class="flex">
+				<button class="btn btn-square btn-ghost" on:click={() => toggleMenu()}>
 					<svg
 						xmlns="http://www.w3.org/2000/svg"
 						fill="none"
@@ -189,7 +166,6 @@
 					>
 				</button>
 				<div class="menu" class:hidden={!showMenu}>
-					<button class="btn btn-square btn-ghost">Edit post</button>
 					<button on:click={() => deletePost(id)} class="btn btn-square btn-ghost"
 						>Delete post</button
 					>
@@ -203,20 +179,44 @@
 	<div class="post-footer">
 		<div class="post-stat">
 			<button on:click={() => likePost(id, true)}
-				><div class="likes">
+				><span class="likes">
 					Likes count:{likeCount}<i class:liked={isLiked} class="fa fa-thumbs-up" />
-				</div></button
+				</span></button
 			>
 			<button on:click={() => likePost(id, false)}
-				><div class="dislikes">
+				><span class="dislikes">
 					Dislikes count:{dislikeCount}<i class:disliked={isDisLiked} class="fa fa-thumbs-down" />
-				</div></button
+				</span></button
 			>
-			<button
-				><div class="comments">
+			<button on:click={() => initComments(id)}
+				><span class="comments">
 					Comments count:{commentCount}<i class="fa fa-commenting" />
-				</div></button
+				</span></button
 			>
 		</div>
+	</div>
+	<div class:hidden={hide} class="post-comments">
+		{#if comments}
+			<div class="comment-form">
+				<form on:submit|preventDefault={() => refreshComments(id, commentContent)}>
+					<textarea
+						bind:value={commentContent}
+						class="message-form"
+						placeholder="Treść wiadomości"
+						required
+					/>
+					<button type="submit" class="submit-button">Post</button>
+					<button on:click={() => (hide = true)} type="button" class="submit-button">Hide</button>
+				</form>
+			</div>
+			{#each comments as comment}
+				<Comment
+					userId={comment.user_id}
+					userName={comment.name}
+					messageContent={comment.messageContent}
+					createdAt={comment.created_at}
+				/>
+			{/each}
+		{/if}
 	</div>
 </div>

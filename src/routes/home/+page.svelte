@@ -12,8 +12,8 @@
 	let userName = '';
 	let messageContent: String = '';
 	interface Post {
-		id: number;
-		user_id: number;
+		_id: string;
+		user_id: string;
 		name: string;
 		email: string;
 		messageContent: string;
@@ -112,10 +112,10 @@
 			<div class="row">
 				{#each posts as post}
 					<Post
-						id={post.id}
+						id={post._id}
 						userId={post.user_id}
-						userName={post.name}
-						userEmail={post.email}
+						userName={post.user.name}
+						userEmail={post.user.email}
 						messageContent={post.messageContent}
 						createdAt={post.created_at}
 					/>

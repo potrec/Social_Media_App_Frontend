@@ -5,7 +5,7 @@
 	import { onMount } from 'svelte';
 	import { getTimeDifference } from '../../scripts/getTime';
 
-	export let userId: number;
+	export let userId: string;
 	export let userName: string;
 	export let messageContent: string;
 	export let createdAt: string;
@@ -22,7 +22,7 @@
 	});
 </script>
 
-{#if userId != Number(loggedUserId)}
+{#if userId != loggedUserId}
 	<div class="comment-module">
 		<div class="chat chat-start">
 			<div class="chat-header">

@@ -3,7 +3,7 @@ import type { AxiosResponse, AxiosError } from 'axios';
 import { getToken } from './getToken';
 import { navigate } from './navigate';
 
-export async function getUserNameById(userId: number) {
+export async function getUserNameById(userid: string) {
   let userName = '';
   const http = axios.create({
   baseURL: 'http://127.0.0.1:8000',

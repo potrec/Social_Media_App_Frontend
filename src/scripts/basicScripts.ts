@@ -1,7 +1,7 @@
 import type { AxiosResponse, AxiosError } from 'axios';
 import { http } from './http';
 
-export function checkUserIfUserPosted(loggedUserId: number, userId: number): boolean {
+export function checkUserIfUserPosted(loggedUserid: string, userId: string): boolean {
   if (loggedUserId != userId) {
     return true;
   }
@@ -10,7 +10,7 @@ export function checkUserIfUserPosted(loggedUserId: number, userId: number): boo
 export function getFirstUsernameLetter(userName: string) {
   return userName.charAt(0);
 }
-export async function createComment(post_id: number, messageContent: string)
+export async function createComment(post_id: string, messageContent: string)
 {
   const response = await http
   .post(`/api/post/comment/create`, {
@@ -23,10 +23,10 @@ export async function createComment(post_id: number, messageContent: string)
     console.log(error);
   });
 }
-export function commentInit(post_id: number, messageContent: string){
+export function commentInit(post_id: string, messageContent: string){
   createComment(post_id, messageContent); 
 }
-export async function deletePost(postId: Number) {
+export async function deletePost(postid: string) {
   const request = await http
     .delete(`/api/posts/${postId}`)
     .then((response: AxiosResponse<{ error: string }>) => {
@@ -36,7 +36,7 @@ export async function deletePost(postId: Number) {
       console.log(reason);
     });
 }
-export async function getCommentsCount(id: number) {
+export async function getCommentsCount(id: string) {
   let count: number = 0;
   const request = await http
     .get(`/api/getposts/comments/count/${id}`)

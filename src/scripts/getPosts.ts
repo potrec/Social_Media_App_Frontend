@@ -13,6 +13,7 @@ export async function getPosts()
   .catch((reason: AxiosError) => {
     console.error(reason);
   });
-
+  console.log(posts);
+  console.log(posts[0].user.name);
   return posts;
 }

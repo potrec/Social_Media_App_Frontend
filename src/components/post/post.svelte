@@ -16,8 +16,8 @@
 	} from '../../scripts/basicScripts';
 	import { http } from '../../scripts/http';
 
-	export let id: number;
-	export let userId: number;
+	export let id: string;
+	export let userId: string;
 	export let userName: string;
 	export let userEmail: string;
 	export let messageContent: string;
@@ -28,7 +28,7 @@
 		dislikes_count: number;
 	}
 	interface Comment {
-		user_id: number;
+		user_id: string;
 		name: string;
 		messageContent: string;
 		created_at: string;
@@ -38,10 +38,10 @@
 	let isUserPost = true;
 	let userAvatar = getFirstUsernameLetter(userName);
 	let postTime = getTimeDifference(createdAt.toString());
-	let loggedUserId = sessionStorage.getItem('userId');
-	if (loggedUserId) {
-		isUserPost = checkUserIfUserPosted(parseInt(loggedUserId), userId);
-	}
+	// let loggedUserId = sessionStorage.getItem('userId');
+	// if (loggedUserId) {
+	// 	isUserPost = checkUserIfUserPosted(loggedUserId, userId);
+	// }
 	let showMenu = false;
 	let likeStats: LikeStats | null = null;
 	let likeCount: Number = 0;
@@ -56,7 +56,7 @@
 	function toggleMenu() {
 		showMenu = !showMenu;
 	}
-	async function likePost(post_id: number, like: boolean) {
+	async function likePost(post_id: string, like: boolean) {
 		const request = await http
 			.post(`/api/reaction/like`, {
 				post_id: post_id,
@@ -73,7 +73,7 @@
 		}
 		getPostStatus(post_id);
 	}
-	async function getPostsStats(post_id: number) {
+	async function getPostsStats(post_id: string) {
 		const request = await http
 			.post(`/api/reaction/like/count`, {
 				post_id: post_id
@@ -86,7 +86,7 @@
 			});
 		return likeStats;
 	}
-	async function getPostStatus(post_id: number) {
+	async function getPostStatus(post_id: string) {
 		const request = await http
 			.post(`/api/reaction/like/check`, {
 				post_id: post_id
@@ -107,11 +107,11 @@
 				console.log(reason);
 			});
 	}
-	async function initComments(id: number) {
+	async function initComments(id: string) {
 		comments = await getComments(id);
 		hide = false;
 	}
-	async function refreshComments(id: number, commentContent: string) {
+	async function refreshComments(id: string, commentContent: string) {
 		await createComment(id, commentContent);
 		comments = await getComments(id);
 		commentCount = await getCommentsCount(id);

@@ -14,10 +14,13 @@
 	interface Post {
 		_id: string;
 		user_id: string;
-		name: string;
-		email: string;
+		user: User;
 		messageContent: string;
 		created_at: string;
+	}
+	interface User {
+		name: string;
+		email: string;
 	}
 	let posts: Post[] = [];
 

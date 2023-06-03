@@ -57,6 +57,7 @@
 		showMenu = !showMenu;
 	}
 	async function likePost(post_id: string, like: boolean) {
+		console.log(post_id, like);
 		const request = await http
 			.post(`/api/reaction/like`, {
 				post_id: post_id,
@@ -92,6 +93,7 @@
 				post_id: post_id
 			})
 			.then((response: AxiosResponse) => {
+				console.log(response);
 				if (response.data.message == 1) {
 					isLiked = true;
 					isDisLiked = false;

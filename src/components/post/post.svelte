@@ -22,6 +22,8 @@
 	export let userEmail: string;
 	export let messageContent: string;
 	export let createdAt: string;
+	export let reactionStatus: boolean | null;
+	export let reactionsCount: number[];
 
 	interface LikeStats {
 		likes_count: number;
@@ -38,16 +40,15 @@
 	let isUserPost = true;
 	let userAvatar = getFirstUsernameLetter(userName);
 	let postTime = getTimeDifference(createdAt.toString());
-	// let loggedUserId = sessionStorage.getItem('userId');
-	// if (loggedUserId) {
-	// 	isUserPost = checkUserIfUserPosted(loggedUserId, userId);
-	// }
+	let loggedUserId = sessionStorage.getItem('userId');
+	if (loggedUserId) {
+		isUserPost = checkUserIfUserPosted(loggedUserId, userId);
+	}
 	let showMenu = false;
 	let likeStats: LikeStats | null = null;
-	let likeCount: Number = 0;
-	let dislikeCount: Number = 0;
+	let likeCount: Number = reactionsCount[0];
+	let dislikeCount: Number = reactionsCount[1];
 	let commentCount: Number = 0;
-	let isLiked: Boolean = false;
 	let isDisLiked: Boolean = false;
 	let commentContent = '';
 	let hide = true;
@@ -57,7 +58,17 @@
 		showMenu = !showMenu;
 	}
 	async function likePost(post_id: string, like: boolean) {
-		console.log(post_id, like);
+		console.log(post_id, like, reactionStatus);
+		if (reactionStatus != null) {
+			if (reactionStatus == like) {
+				reactionStatus = null;
+			} else {
+				reactionStatus = !reactionStatus;
+			}
+		} else {
+			reactionStatus = like;
+		}
+		console.log(post_id, like, reactionStatus);
 		const request = await http
 			.post(`/api/reaction/like`, {
 				post_id: post_id,
@@ -72,7 +83,6 @@
 			likeCount = likeStats.likes_count;
 			dislikeCount = likeStats.dislikes_count;
 		}
-		getPostStatus(post_id);
 	}
 	async function getPostsStats(post_id: string) {
 		const request = await http
@@ -86,28 +96,6 @@
 				console.log(reason);
 			});
 		return likeStats;
-	}
-	async function getPostStatus(post_id: string) {
-		const request = await http
-			.post(`/api/reaction/like/check`, {
-				post_id: post_id
-			})
-			.then((response: AxiosResponse) => {
-				console.log(response);
-				if (response.data.message == 1) {
-					isLiked = true;
-					isDisLiked = false;
-				} else if (response.data.message == 0) {
-					isDisLiked = true;
-					isLiked = false;
-				} else {
-					isDisLiked = false;
-					isLiked = false;
-				}
-			})
-			.catch((reason: AxiosError<{ error: string }>) => {
-				console.log(reason);
-			});
 	}
 	async function initComments(id: string) {
 		comments = await getComments(id);
@@ -125,7 +113,6 @@
 			dislikeCount = likeStats.dislikes_count;
 		}
 		commentCount = await getCommentsCount(id);
-		getPostStatus(id);
 	});
 </script>
 
@@ -182,12 +169,18 @@
 		<div class="post-stat">
 			<button on:click={() => likePost(id, true)}
 				><span class="likes">
-					Likes count:{likeCount}<i class:liked={isLiked} class="fa fa-thumbs-up" />
+					Likes count:{likeCount}<i
+						class:liked={reactionStatus == true && reactionStatus != null}
+						class="fa fa-thumbs-up"
+					/>
 				</span></button
 			>
 			<button on:click={() => likePost(id, false)}
 				><span class="dislikes">
-					Dislikes count:{dislikeCount}<i class:disliked={isDisLiked} class="fa fa-thumbs-down" />
+					Dislikes count:{dislikeCount}<i
+						class:disliked={reactionStatus == false && reactionStatus != null}
+						class="fa fa-thumbs-down"
+					/>
 				</span></button
 			>
 			<button on:click={() => initComments(id)}

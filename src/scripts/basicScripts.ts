@@ -1,7 +1,8 @@
 import type { AxiosResponse, AxiosError } from 'axios';
 import { http } from './http';
 
-export function checkUserIfUserPosted(loggedUserid: string, userId: string): boolean {
+export function checkUserIfUserPosted(loggedUserId: string, userId: string): boolean {
+  console.log(loggedUserId,userId);
   if (loggedUserId != userId) {
     return true;
   }
@@ -26,7 +27,7 @@ export async function createComment(post_id: string, messageContent: string)
 export function commentInit(post_id: string, messageContent: string){
   createComment(post_id, messageContent); 
 }
-export async function deletePost(postid: string) {
+export async function deletePost(postId: string) {
   const request = await http
     .delete(`/api/posts/${postId}`)
     .then((response: AxiosResponse<{ error: string }>) => {

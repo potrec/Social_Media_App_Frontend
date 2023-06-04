@@ -17,6 +17,8 @@
 		user: User;
 		messageContent: string;
 		created_at: string;
+		reactionStatus: boolean | null;
+		reactionsCount: number[];
 	}
 	interface User {
 		name: string;
@@ -121,6 +123,8 @@
 						userEmail={post.user.email}
 						messageContent={post.messageContent}
 						createdAt={post.created_at}
+						reactionStatus={post.reactionStatus}
+						reactionsCount={post.reactionsCount}
 					/>
 				{/each}
 			</div>

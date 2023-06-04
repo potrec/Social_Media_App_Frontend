@@ -209,7 +209,7 @@
 					userId={comment.user_id}
 					userName={comment.name}
 					messageContent={comment.messageContent}
-					createdAt={comment.created_at}
+					createdAt={comment.created_at.toString()}
 				/>
 			{/each}
 		{/if}
